@@ -1,0 +1,45 @@
+name: Python Code Quality Check
+
+on: [pull_request]
+
+jobs:
+  validate-python:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+
+    - name: Show Git Diff (from last commit)
+      run: |
+        echo "Changed files:"
+        git diff --name-only HEAD~1 HEAD
+        echo ""
+        echo "Code changes:"
+        git diff HEAD~1 HEAD || true
+
+    - name: Install dependencies
+      run: |
+        pip install flake8 black
+
+    - name: Check Python Syntax
+      run: |
+        echo "Checking syntax..."
+        for file in $(find . -name "*.py"); do
+          python -m py_compile "$file"
+        done
+
+    - name: Lint with flake8
+      run: |
+        echo "Running flake8 linter..."
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    - name: Check formatting with black
+      run: |
+        echo "Checking code formatting with black..."
+        black --check .
