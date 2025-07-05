@@ -1,0 +1,13 @@
+[
+    {
+        "timestamp": "2025-07-05 22:32:35",
+        "products": [
+            {
+                "name": "Cream",
+                "price": 45000.0,
+                "quantity": 2
+            }
+        ],
+        "total": 81000
+    }
+]
